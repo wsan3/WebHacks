@@ -5,9 +5,81 @@ import { Link } from "react-router-dom";
 
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import { collection, where, query, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { db } from '../firebase';
+import { FieldValue } from 'firebase/firestore';
 
 
 export default function NewGroup() {
+    const [items, setItems] = React.useState([]);
+    const [showSuccess, setShowSuccess] = React.useState(false);
+    const [title, setTitle] = React.useState('');
+    const [createdBy, setCreatedBy] = React.useState('');
+    const [people, setPeople] = React.useState([]);
+
+    const handleTitle = (event) => {
+        setTitle(event.target.value);
+    };
+
+    const handleCreatedBy = (event) => {
+        setCreatedBy(event.target.value);
+    };
+
+    const handlePeople = (event) => {
+        setPeople(event.target.value);
+    };
+
+    const addItemArr = (event) => {
+        setPeople(currArr => [...currArr, '']);
+        setItems(currArr => [...currArr, '']);
+    };
+
+    const updateUser = (e, index) => {
+        let bruhh = people;
+        bruhh[index] = e.target.value;
+        setPeople([...bruhh]);
+    };
+
+    const submitSuccess = () => {
+        setShowSuccess(true);
+        setTimeout(function () {
+            setShowSuccess(false);
+        }, 3000);
+    }
+
+    const submit = () => {
+        const id = new Date().getTime().toString();
+        const groupsRef = collection(db, "Groups");
+
+        setDoc(doc(groupsRef, id), {
+            createdBy: createdBy,
+            title: title,
+            expenses: [],
+            people: people
+        });
+
+        // var db = firebase.firestore();
+        // db2.collection("Users").doc("Q7P2o9HQskJmkSEDaSAX").update({ name: "Jackie Chan" });
+
+        // const usersRef = collection(db, 'Users');
+        // const q = query(usersRef, where("name", "==", "Vinesh Janarthanan"))
+        // const querySnapshot = getDocs(q)
+        //     .then((d) => {
+        //         d.forEach((doc) => {
+        //             // console.log(doc.id, doc.data().venmo)
+        //             db.collection('Users').doc(doc.id).update({
+        //                 groups: FieldValue.arrayUnion(id)
+        //             });
+        //         })
+        //     })
+
+        // for (var i = 0; i < people.length; i++) {
+        //     usersRef.where('name', '==', "Vinesh Janarthanan");
+        // }
+
+        submitSuccess()
+    };
+
     return (
         <Box style={{
             height: '750px',
@@ -29,24 +101,26 @@ export default function NewGroup() {
             </Box>
             <Box sx={{ display: 'flex', bgcolor: '#ffffff', height: '700px', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column' }}>
                 <Box sx={{ height: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    {true ? <Alert severity="success">Success! New group was created!</Alert> : null}
+                    {showSuccess ? <Alert severity="success">Success! New group was created!</Alert> : null}
                 </Box>
                 <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#e65d3e' }}>Create New Group</Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField  sx={{ margin: 2, width: '300px' }} id="outlined-basic" label="Item" variant="outlined" />
-                    <TextField disabled v sx={{ margin: 2, width: '200px' }} id="outlined-basic" label="Found Date" variant="outlined" />
+                    <TextField sx={{ margin: 2, width: '300px' }} onChange={handleTitle} id="outlined-basic" label="Title" variant="outlined" />
+                    <TextField sx={{ margin: 2, width: '200px' }} onChange={handleCreatedBy} id="outlined-basic" label="Created By" variant="outlined" />
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField  sx={{ margin: 2, width: '200px' }} id="outlined-basic" label="Email" variant="outlined" />
-                    <TextField  sx={{ margin: 2, width: '300px' }} id="outlined-basic" label="Keywords" variant="outlined" />
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField sx={{ margin: 2, width: '300px' }} id="outlined-basic" label="Location" variant="outlined" />
-                    <Button variant="contained" sx={{ margin: 2, color: 'white', width: '200px' }}> Search</Button>
-                </Box>
-                <TextField disabled sx={{ margin: 2, width: '530px', background: '#f7f7f7' }} id="outlined-basic" label="" variant="outlined" />
 
-                <Button variant="contained" color="success" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} >Submit</Button>
+                {items.map((item, idx) => {
+                    return (
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <TextField sx={{ margin: 2, width: '535px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Friend" variant="outlined" />
+                        </Box>
+                    )
+                })}
+
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <Button variant="contained" color="warning" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={addItemArr}>Add Item</Button>
+                    <Button variant="contained" color="success" onClick={submit} sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} >Submit</Button>
+                </Box>
             </Box>
         </Box>
     );
