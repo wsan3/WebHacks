@@ -16,7 +16,7 @@ export default function Main() {
             justifyContent: 'flex-start',
             backgroundColor: '#e3f3ff',
             padding: 0,
-            margin: 0,  
+            margin: 0,
         }}>
             <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
@@ -27,8 +27,12 @@ export default function Main() {
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', bgcolor: '#ffffff', height: '690px', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                <Button variant="contained" sx={{ width: '300px', height: '50px', margin: 2 }}>Add Expense</Button>
-                <Button variant="outlined" sx={{ width: '300px', height: '50px', margin: 2 }} >Create New Grouping</Button>
+                < Link style={{ color: 'white', textDecoration: 'none', fontWeight: 500 }} to="/addexpense">
+                    <Button variant="contained" sx={{ width: '300px', height: '50px', margin: 2 }}>Add New Expense</Button>
+                </Link>
+                < Link style={{ color: '#1976d2', textDecoration: 'none', fontWeight: 500 }} to="/newgroup">
+                    <Button variant="outlined" sx={{ width: '300px', height: '50px', margin: 2 }}>Create New Group</Button>
+                </Link>
             </Box>
         </Box>
     );
