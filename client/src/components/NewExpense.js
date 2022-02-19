@@ -76,6 +76,10 @@ export default function NewExpense() {
         }, 3000);
     }
 
+    const handleVenmo = (item, phone, price) => {
+        window.open("https://venmo.com/"+phone+"?txn=charge&note="+item+"&amount="+price);
+      };
+
     const submit = () => {
         const usersRef = collection(db, "Expenses");
         setDoc(doc(usersRef, new Date().getTime().toString()), {
@@ -117,7 +121,7 @@ export default function NewExpense() {
                 </Box>
                 <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#e65d3e' }}>Create New Expense</Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField sx={{ margin: 2, width: '350px' }} id="outlined-basic" label="Expense Title" variant="outlined" />
+                    <TextField sx={{ margin: 2, width: '350px' }} id="outlined-basic" value={title} onChange={handleTitle} label="Expense Title" variant="outlined" />
                     {/* <TextField disabled v sx={{ margin: 2, width: '200px' }} id="outlined-basic" label={new Date().toLocaleString()} variant="outlined" /> */}
 
                     <FormControl sx={{ m: 1, minWidth: 140 }}>
@@ -135,7 +139,7 @@ export default function NewExpense() {
                     </FormControl>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField sx={{ margin: 2, width: '500px' }} value={description} onChange={setDescription} id="outlined-basic" label="Description" variant="outlined" />
+                    <TextField sx={{ margin: 2, width: '500px' }} value={description} onChange={handleDescription} id="outlined-basic" label="Description" variant="outlined" />
                 </Box>
                 {items.map((item, idx) => {
                     return (
@@ -143,7 +147,7 @@ export default function NewExpense() {
                             <TextField sx={{ margin: 2, width: '230px' }} value={items[idx]} onChange={e => updateItem(e, idx)} id="outlined-basic" label="Item" variant="outlined" />
                             <TextField sx={{ margin: 2, width: '230px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Email or Phone Number" variant="outlined" />
                             <TextField sx={{ margin: 2, width: '230px' }} value={prices[idx]} onChange={g => updatePrice(g, idx)} id="outlined-basic" label="Price" variant="outlined" />
-                            <Button variant="contained" sx={{ margin: 2, color: 'white', width: '100px' }}> Charge</Button>
+                            <Button variant="contained" sx={{ margin: 2, color: 'white', width: '100px' }} onClick ={() => handleVenmo(items[idx], people[idx], prices[idx])}> Charge</Button>
                         </Box>
                     )
 
