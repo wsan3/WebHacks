@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Link } from "react-router-dom";
@@ -17,6 +17,8 @@ import axios from 'axios';
 
 export default function NewExpense() {
     const [group, setGroup] = React.useState('');
+    const [groupsss, setGroupsss] = React.useState([]);
+
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [items, setItems] = React.useState([]);
@@ -26,10 +28,33 @@ export default function NewExpense() {
     const [parseResults, setParseResults] = React.useState('');
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
+    const [stateVar, setStateVar] =React.useState(true);
 
-    const groups = [
-        "Utilities", "School", "Friends", "Couple", "Personal", "Other"
-    ]
+    useEffect(async() => {
+        // // Update the document title using the browser API
+
+        
+
+    });
+
+    const asd = async() =>{
+
+        const q = query(collection(db, "Groups"));
+
+        const querySnapshot = await getDocs(q);
+        // setGroupsss(querySnapshot);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+            // let bruhh = groupsss;
+            //  bruhh.push(doc.data());
+            setGroupsss(a => [...a, doc.data]);
+        });
+        setStateVar(false);
+    }
+    // const groups = [
+    //     "Utilities", "School", "Friends", "Couple", "Personal", "Other"
+    // ]
     const handleGroupChange = (event) => {
         setGroup(event.target.value);
     };
@@ -162,6 +187,8 @@ export default function NewExpense() {
 
 
     return (
+
+       
         <Box style={{
             height: '750px',
             width: '100%',
@@ -172,6 +199,11 @@ export default function NewExpense() {
             padding: 0,
             margin: 0,
         }}>
+        {/* {        
+            stateVar?
+                asd() : console.log("")
+            } */}
+        
             <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
                     <Box sx={{ fontSize: 20, padding: 2, fontWeight: 'bold', color: 'white' }}>S L I C E</Box>
@@ -210,7 +242,7 @@ export default function NewExpense() {
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                         >
-                            {groups.map((gr) => <MenuItem value={10}>{gr}</MenuItem>)}
+                            {groupsss.map((gr) => <MenuItem value={10}>{gr.title}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
