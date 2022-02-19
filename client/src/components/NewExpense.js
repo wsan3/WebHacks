@@ -12,6 +12,7 @@ import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import { collection, where, query, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from '../firebase';
+import axios from 'axios';
 
 
 export default function NewExpense() {
@@ -22,7 +23,9 @@ export default function NewExpense() {
     const [prices, setPrices] = React.useState([]);
     const [people, setPeople] = React.useState([]);
     const [creator, setCreator] = React.useState('');
+    const [parseResults, setParseResults] = React.useState('');
     const [showSuccess, setShowSuccess] = React.useState(false);
+    const [selectedImage, setSelectedImage] = React.useState(null);
 
     const groups = [
         "Utilities", "School", "Friends", "Couple", "Personal", "Other"
@@ -54,19 +57,19 @@ export default function NewExpense() {
         let oldItemsCopy = items;
         oldItemsCopy[index] = e.target.value;
         setItems([...oldItemsCopy]);
-      };
-    
-      const updateUser = (e, index) => {
+    };
+
+    const updateUser = (e, index) => {
         let bruhh = people;
         bruhh[index] = e.target.value;
         setPeople([...bruhh]);
-      };
+    };
 
-      const updatePrice = (e, index) => {
+    const updatePrice = (e, index) => {
         let bruhh = prices;
         bruhh[index] = e.target.value;
         setPrices([...bruhh]);
-      };
+    };
 
 
     const submitSuccess = () => {
@@ -77,8 +80,45 @@ export default function NewExpense() {
     }
 
     const handleVenmo = (item, phone, price) => {
-        window.open("https://venmo.com/"+phone+"?txn=charge&note="+item+"&amount="+price);
-      };
+        window.open("https://venmo.com/" + phone + "?txn=charge&note=" + item + "&amount=" + price);
+    };
+
+    const parseReceipt = () => {
+        // let receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt';
+        // const requestOptions = {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ title: 'React POST Request Example' })
+        // };
+        // request.post({
+        //   url: receiptOcrEndpoint,
+        //   formData: {
+        //     client_id: 'TEST',        // Use 'TEST' for testing purpose
+        //     recognizer: 'auto',        // can be 'US', 'CA', 'JP', 'SG' or 'auto'
+        //     ref_no: 'ocr_nodejs_123', // optional caller provided ref code
+        //     file: selectedImage // the image file
+        //   },
+        // }, function(error, response, body) {
+        //   if(error) {
+        //     console.error(error);
+        //   }
+        //   console.log(body); // Receipt OCR result in JSON
+        //   setParseResults(body);
+        // });
+
+
+
+
+
+        const formData = new FormData();
+        formData.append("client_id", "TEST");
+        formData.append("recognizer", "auto");
+        formData.append("ref_no", 'ocr_nodejs_123');
+        formData.append("file", selectedImage);
+        axios.post("https://ocr.asprise.com/api/v1/receipt", formData).then((res) => {
+          setParseResults(res);
+        });
+    }
 
     const submit = () => {
         const usersRef = collection(db, "Expenses");
@@ -119,7 +159,21 @@ export default function NewExpense() {
                 <Box sx={{ height: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {showSuccess ? <Alert severity="success">Success! New expense was added!</Alert> : null}
                 </Box>
+
                 <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#e65d3e' }}>Create New Expense</Box>
+                <input
+                    type="file"
+                    name="myImage"
+                    onChange={(event) => {
+                        console.log(event.target.files[0]);
+                        setSelectedImage(event.target.files[0]);
+                    }}
+                />
+                <Button onClick ={() => parseReceipt} >Parse Receipt</Button>
+                {
+                    JSON.stringify(parseResults)
+                }
+                <Box>- or -</Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <TextField sx={{ margin: 2, width: '350px' }} id="outlined-basic" value={title} onChange={handleTitle} label="Expense Title" variant="outlined" />
                     {/* <TextField disabled v sx={{ margin: 2, width: '200px' }} id="outlined-basic" label={new Date().toLocaleString()} variant="outlined" /> */}
@@ -147,7 +201,7 @@ export default function NewExpense() {
                             <TextField sx={{ margin: 2, width: '230px' }} value={items[idx]} onChange={e => updateItem(e, idx)} id="outlined-basic" label="Item" variant="outlined" />
                             <TextField sx={{ margin: 2, width: '230px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Email or Phone Number" variant="outlined" />
                             <TextField sx={{ margin: 2, width: '230px' }} value={prices[idx]} onChange={g => updatePrice(g, idx)} id="outlined-basic" label="Price" variant="outlined" />
-                            <Button variant="contained" sx={{ margin: 2, color: 'white', width: '100px' }} onClick ={() => handleVenmo(items[idx], people[idx], prices[idx])}> Charge</Button>
+                            <Button variant="contained" sx={{ margin: 2, color: 'white', width: '100px' }} onClick={() => handleVenmo(items[idx], people[idx], prices[idx])}> Charge</Button>
                         </Box>
                     )
 
