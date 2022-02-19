@@ -12,6 +12,7 @@ import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
 import { collection, where, query, getDoc, getDocs, doc, setDoc, clearIndexedDbPersistence } from "firebase/firestore";
 import { db } from '../firebase';
+import logo from '../assests/card.png'
 import axios from 'axios';
 
 
@@ -77,6 +78,11 @@ export default function NewExpense() {
         setPeople(currArr => [...currArr, '']);
     };
 
+    const removeItemArr = (event) => {
+        setPrices(prices.splice(-1));
+        setItems(items.splice(-1));
+        setPeople(people.splice(-1));
+    };
 
     const updateItem = (e, index) => {
         let oldItemsCopy = items;
@@ -131,10 +137,6 @@ export default function NewExpense() {
         //   setParseResults(body);
         // });
 
-
-
-
-
         const formData = new FormData();
         formData.append("client_id", "TEST");
         formData.append("recognizer", "auto");
@@ -142,32 +144,32 @@ export default function NewExpense() {
         formData.append("file", selectedImage);
         axios.post("https://ocr.asprise.com/api/v1/receipt", formData).then((res) => {
             console.log(res);
-          setParseResults(res);
-          setTitle(res.data.receipts[0].merchant_name)
-          res.data.receipts[0].items.forEach((it,idx) => {
+            setParseResults(res);
+            setTitle(res.data.receipts[0].merchant_name)
+            res.data.receipts[0].items.forEach((it, idx) => {
                 setItems(oldArr => [...oldArr, it.description]);
                 setPrices(oldArr => [...oldArr, it.amount]);
                 setPeople(oldArr => [...oldArr, '']);
-          })
+            })
 
         }).catch(function (error) {
             if (error.response) {
-              // The request was made and the server responded with a status code
-              // that falls out of the range of 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
             } else if (error.request) {
-              // The request was made but no response was received
-              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-              // http.ClientRequest in node.js
-              console.log(error.request);
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
             } else {
-              // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
             }
             console.log(error.config);
-          });
+        });
     }
 
     const submit = () => {
@@ -185,6 +187,15 @@ export default function NewExpense() {
         submitSuccess()
     };
 
+    const showPreview = (event) => {
+        if (event.target.files.length > 0) {
+            var src = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById("file-ip-1-preview");
+            preview.src = src;
+            preview.style.display = "block";
+        }
+    }
+
 
     return (
 
@@ -199,13 +210,9 @@ export default function NewExpense() {
             padding: 0,
             margin: 0,
         }}>
-        {/* {        
-            stateVar?
-                asd() : console.log("")
-            } */}
-        
-            <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ bgcolor: '#303030', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
+                    <img style={{ height: '40px' }} src={logo} alt="Logo" />
                     <Box sx={{ fontSize: 20, padding: 2, fontWeight: 'bold', color: 'white' }}>S L I C E</Box>
                 </Box>
                 <Box sx={{ bgcolor: '#1976d2', width: '100px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 1, margin: 5 }}>
@@ -217,24 +224,38 @@ export default function NewExpense() {
                     {showSuccess ? <Alert severity="success">Success! New expense was added!</Alert> : null}
                 </Box>
 
-                <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#e65d3e' }}>Create New Expense</Box>
-                <input
-                    type="file"
-                    name="myImage"
-                    onChange={(event) => {
-                        console.log(event.target.files[0]);
-                        setSelectedImage(event.target.files[0]);
-                    }}
-                />
-                <Button onClick ={() => parseReceipt()} >Parse Receipt</Button>
-                <Box>- or -</Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#1976d2' }}>Create New Expense</Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Box sx={{margin:3}} >
+                        <img id="file-ip-1-preview" height={400} width={400} />
+                    </Box>
+                    <Box sx={{ height:'400px',display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
+
+                        <input
+                            style={{ padding: 30, marginLeft: 70 }}
+                            type="file"
+                            name="myImage"
+                            onChange={(event) => {
+                                console.log(event.target.files[0]);
+                                setSelectedImage(event.target.files[0]);
+                                showPreview(event);
+                            }}
+
+                        />
+                        <Button sx={{ margin: 2 }} variant='contained' onClick={() => parseReceipt()} >Parse Receipt</Button>
+
+                    </Box>
+                </Box>
+
+
+                <Box> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                     <TextField sx={{ margin: 2, width: '350px' }} id="outlined-basic" value={title} onChange={handleTitle} label="Expense Title" variant="outlined" />
                     {/* <TextField disabled v sx={{ margin: 2, width: '200px' }} id="outlined-basic" label={new Date().toLocaleString()} variant="outlined" /> */}
 
                     <FormControl sx={{ m: 1, minWidth: 140 }}>
                         <InputLabel>Group</InputLabel>
-
                         <Select
                             value={group}
                             label="Group"
@@ -246,8 +267,8 @@ export default function NewExpense() {
                         </Select>
                     </FormControl>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextField sx={{ margin: 2, width: '500px' }} value={description} onChange={handleDescription} id="outlined-basic" label="Description" variant="outlined" />
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <TextField sx={{ margin: 2, width: '510px' }} value={description} onChange={handleDescription} id="outlined-basic" label="Description" variant="outlined" />
                 </Box>
                 {items.map((item, idx) => {
                     return (
@@ -267,6 +288,7 @@ export default function NewExpense() {
                 </Box> */}
                 {/* <TextField disabled sx={{ margin: 2, width: '530px', background: '#f7f7f7' }} id="outlined-basic" label="" variant="outlined" /> */}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <Button variant="contained" color="error" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={removeItemArr}>Remove Item</Button>
                     <Button variant="contained" color="warning" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={addItemArr}>Add Item</Button>
                     <Button variant="contained" color="success" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={submit}>Submit</Button>
                 </Box>

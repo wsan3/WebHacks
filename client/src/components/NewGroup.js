@@ -8,6 +8,8 @@ import Alert from '@mui/material/Alert';
 import { collection, where, query, getDoc, getDocs, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../firebase';
 import { FieldValue } from 'firebase/firestore';
+import logo from '../assests/card.png'
+
 
 
 export default function NewGroup() {
@@ -58,7 +60,7 @@ export default function NewGroup() {
             createdBy: createdBy,
             title: title,
             expenses: [],
-            people: people
+            venmos: people
         });
 
         const itemRef = collection(db, 'Users');
@@ -120,8 +122,9 @@ export default function NewGroup() {
             padding: 0,
             margin: 0,
         }}>
-            <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ bgcolor: '#303030', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
+                    <img style={{ height: '40px' }} src={logo} alt="Logo" />
                     <Box sx={{ fontSize: 20, padding: 2, fontWeight: 'bold', color: 'white' }}>S L I C E</Box>
                 </Box>
                 <Box sx={{ bgcolor: '#1976d2', width: '100px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 1, margin: 5 }}>
@@ -132,7 +135,7 @@ export default function NewGroup() {
                 <Box sx={{ height: '80px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {showSuccess ? <Alert severity="success">Success! New group was created!</Alert> : null}
                 </Box>
-                <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#e65d3e' }}>Create New Group</Box>
+                <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#1976d2' }}>Create New Group</Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <TextField sx={{ margin: 2, width: '300px' }} onChange={handleTitle} id="outlined-basic" label="Title" variant="outlined" />
                     <TextField sx={{ margin: 2, width: '200px' }} onChange={handleCreatedBy} id="outlined-basic" label="Created By" variant="outlined" />
@@ -141,7 +144,7 @@ export default function NewGroup() {
                 {items.map((item, idx) => {
                     return (
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <TextField sx={{ margin: 2, width: '535px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Friend" variant="outlined" />
+                            <TextField sx={{ margin: 2, width: '535px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Venmo" variant="outlined" />
                         </Box>
                     )
                 })}

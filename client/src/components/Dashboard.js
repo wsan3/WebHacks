@@ -14,6 +14,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import logo from '../assests/card.png'
 
 export default function Dashboard() {
     function renderRow(props) {
@@ -39,8 +40,9 @@ export default function Dashboard() {
             padding: 0,
             margin: 0,
         }}>
-            <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ bgcolor: '#303030', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
+                    <img style={{ height: '40px' }} src={logo} alt="Logo" />
                     <Box sx={{ fontSize: 20, padding: 2, fontWeight: 'bold', color: 'white' }}>S L I C E</Box>
                 </Box>
                 <Box sx={{ bgcolor: '#1976d2', width: '100px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 1, margin: 5 }}>
@@ -49,7 +51,7 @@ export default function Dashboard() {
             </Box>
             <Box sx={{ display: 'flex', bgcolor: '#ffffff', height: '690px', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
                 <Box sx={{ width: '600px', height: '600px', margin: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <Button  variant="outlined" sx={{ width: '500px', margin: 2 }}>Friends</Button>
+                    <Button variant="outlined" sx={{ width: '500px', margin: 2 }}>Friends</Button>
 
                     <Box sx={{ width: '100%', height: 400, maxWidth: 500, bgcolor: 'background.paper' }} >
                         <Table sx={{ minWidth: 500 }} aria-label="simple table">
@@ -63,19 +65,19 @@ export default function Dashboard() {
 
                             <TableBody>
                                 <TableRow >
-                                    <TableCell align="left">test</TableCell>
-                                    <TableCell align="left">test</TableCell>
+                                    <TableCell align="left">Vinesh Janarthanan</TableCell>
+                                    <TableCell align="left">2624428111</TableCell>
                                 </TableRow>
                                 <TableRow >
-                                    <TableCell align="left">test</TableCell>
-                                    <TableCell align="left">test</TableCell>
+                                    <TableCell align="left">Luke Selberg</TableCell>
+                                    <TableCell align="left">2622972534</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
                     </Box>
                 </Box>
-                <Box sx={{  width: '600px', height: '600px', margin: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                    <Button  variant="contained" sx={{ width: '500px', margin: 2 }}>Expenses</Button>
+                <Box sx={{ width: '600px', height: '600px', margin: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+                    <Button variant="contained" sx={{ width: '500px', margin: 2 }}>Expenses</Button>
 
                     <Box sx={{ width: '100%', height: 400, maxWidth: 500, bgcolor: 'background.paper' }} >
                         <Table sx={{ minWidth: 500 }} aria-label="simple table">
