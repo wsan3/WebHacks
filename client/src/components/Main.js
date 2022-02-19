@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Link } from "react-router-dom";
 
+import logo from '../assests/card.png'
 import Button from '@mui/material/Button';
 
 
@@ -18,15 +19,19 @@ export default function Main() {
             padding: 0,
             margin: 0,
         }}>
-            <Box sx={{ bgcolor: '#696969', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ bgcolor: '#303030', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 2 }}>
+                    <img style={{ height: '40px' }} src={logo} alt="Logo" />
+
                     <Box sx={{ fontSize: 20, padding: 2, fontWeight: 'bold', color: 'white' }}>S L I C E</Box>
                 </Box>
                 <Box sx={{ bgcolor: '#1976d2', width: '100px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: 1, margin: 5 }}>
                     < Link style={{ color: 'white', textDecoration: 'none', fontWeight: 500 }} to="/dashboard">Dashboard</Link>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', bgcolor: '#ffffff', height: '690px', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', bgcolor: '#ffffff', height: '690px', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'column' }}>
+                <Box sx={{ fontSize: 60, padding: 15, fontWeight: 'bold', color: '#1976d2' }}>All-in-one Expense Manager</Box>
+
                 < Link style={{ color: 'white', textDecoration: 'none', fontWeight: 500 }} to="/addexpense">
                     <Button variant="contained" sx={{ width: '300px', height: '50px', margin: 2 }}>Add New Expense</Button>
                 </Link>
