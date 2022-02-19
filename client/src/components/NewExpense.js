@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import FormHelperText from '@mui/material/FormHelperText';
-import { collection, where, query, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, where, query, getDoc, getDocs, doc, setDoc, clearIndexedDbPersistence } from "firebase/firestore";
 import { db } from '../firebase';
 import axios from 'axios';
 
@@ -116,8 +116,33 @@ export default function NewExpense() {
         formData.append("ref_no", 'ocr_nodejs_123');
         formData.append("file", selectedImage);
         axios.post("https://ocr.asprise.com/api/v1/receipt", formData).then((res) => {
+            console.log(res);
           setParseResults(res);
-        });
+          setTitle(res.data.receipts[0].merchant_name)
+          res.data.receipts[0].items.forEach((it,idx) => {
+                setItems(oldArr => [...oldArr, it.description]);
+                setPrices(oldArr => [...oldArr, it.amount]);
+                setPeople(oldArr => [...oldArr, '']);
+          })
+
+        }).catch(function (error) {
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in node.js
+              console.log(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log('Error', error.message);
+            }
+            console.log(error.config);
+          });
     }
 
     const submit = () => {
@@ -169,10 +194,7 @@ export default function NewExpense() {
                         setSelectedImage(event.target.files[0]);
                     }}
                 />
-                <Button onClick ={() => parseReceipt} >Parse Receipt</Button>
-                {
-                    JSON.stringify(parseResults)
-                }
+                <Button onClick ={() => parseReceipt()} >Parse Receipt</Button>
                 <Box>- or -</Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <TextField sx={{ margin: 2, width: '350px' }} id="outlined-basic" value={title} onChange={handleTitle} label="Expense Title" variant="outlined" />
