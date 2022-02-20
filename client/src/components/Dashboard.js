@@ -83,7 +83,7 @@ export default function Dashboard() {
                         <Table sx={{ minWidth: 500 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell style={{ fontWeight: "bold" }}>Grouping</TableCell>
+                                    <TableCell style={{ fontWeight: "bold" }}>Groups</TableCell>
                                     <TableCell style={{ fontWeight: "bold" }} align="right">Number Receipts</TableCell>
                                     <TableCell style={{ fontWeight: "bold" }} align="right">Number of People</TableCell>
                                 </TableRow>
@@ -92,14 +92,19 @@ export default function Dashboard() {
 
                             <TableBody>
                                 <TableRow  >
-                                    <TableCell component="th" scope="row">test</TableCell>
-                                    <TableCell align="right">test</TableCell>
-                                    <TableCell align="right">test</TableCell>
+                                    <TableCell component="th" scope="row">Utilies</TableCell>
+                                    <TableCell align="right">3</TableCell>
+                                    <TableCell align="right">3</TableCell>
                                 </TableRow>
                                 <TableRow  >
-                                    <TableCell component="th" scope="row">test</TableCell>
-                                    <TableCell align="right">test</TableCell>
-                                    <TableCell align="right">test</TableCell>
+                                    <TableCell component="th" scope="row">Florida Trip</TableCell>
+                                    <TableCell align="right">6</TableCell>
+                                    <TableCell align="right">3</TableCell>
+                                </TableRow>
+                                <TableRow  >
+                                    <TableCell component="th" scope="row">Groceries</TableCell>
+                                    <TableCell align="right">1</TableCell>
+                                    <TableCell align="right">3</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Link } from "react-router-dom";
@@ -18,7 +18,8 @@ import axios from 'axios';
 
 export default function NewExpense() {
     const [group, setGroup] = React.useState('');
-    const [groupsss, setGroupsss] = React.useState([]);
+    const [venmos, setVenmos] = React.useState([]);
+    const [groups, setGroups] = React.useState([]);
 
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
@@ -29,51 +30,32 @@ export default function NewExpense() {
     const [parseResults, setParseResults] = React.useState('');
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
-    const [stateVar, setStateVar] =React.useState(true);
 
-    useEffect(async() => {
-        // // Update the document title using the browser API
+    useEffect(() => {
+        // declare the async data fetching function
+        const fetchData = async () => {
+            const q = query(collection(db, "Groups"));
+            const querySnapshot = await getDocs(q);
+            let groups = []
+            querySnapshot.forEach((doc) => {
+                groups.push(doc.data());
+            });
+            setGroups(groups)
+        }
 
-        
+        // call the function
+        fetchData()
+            // make sure to catch any error
+            .catch(console.error);;
+    }, [])
 
-    });
-
-    const asd = async() =>{
-
-<<<<<<< HEAD
-    React.useEffect(() => {
-        // setShowSuccess(!showSuccess);
-        mero();
-    });
-
-    const mero = () => {
-        console.log("init");
-
-    }
-
-    const groups = [
-        "Utilities", "School", "Friends", "Couple", "Personal", "Other"
-    ]
-=======
-        const q = query(collection(db, "Groups"));
-
-        const querySnapshot = await getDocs(q);
-        // setGroupsss(querySnapshot);
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-            // let bruhh = groupsss;
-            //  bruhh.push(doc.data());
-            setGroupsss(a => [...a, doc.data]);
-        });
-        setStateVar(false);
-    }
-    // const groups = [
-    //     "Utilities", "School", "Friends", "Couple", "Personal", "Other"
-    // ]
->>>>>>> 6a1d07eb2f75355d5d33905ec1b2c2c48b6f177b
     const handleGroupChange = (event) => {
         setGroup(event.target.value);
+        groups.map(obj => {
+            if (obj.title === event.target.value) {
+                setVenmos(obj.venmos);
+            }
+        })
     };
     const handleTitle = (event) => {
         setTitle(event.target.value);
@@ -88,16 +70,19 @@ export default function NewExpense() {
     const addPerson = (event) => {
         setPrices(oldArray => [...oldArray, event.target.value]);
     };
-    const addItemArr = (event) => {
+
+    const addItemArr = () => {
         setPrices(currArr => [...currArr, '']);
         setItems(currArr => [...currArr, '']);
         setPeople(currArr => [...currArr, '']);
-    };
+    }
 
-    const removeItemArr = (event) => {
-        setPrices(prices.splice(-1));
-        setItems(items.splice(-1));
-        setPeople(people.splice(-1));
+    const clearAll = () => {
+        setPrices([]);
+        setPeople([]);
+        setItems([]);
+        setTitle('');
+        setDescription('');
     };
 
     const updateItem = (e, index) => {
@@ -131,28 +116,6 @@ export default function NewExpense() {
     };
 
     const parseReceipt = () => {
-        // let receiptOcrEndpoint = 'https://ocr.asprise.com/api/v1/receipt';
-        // const requestOptions = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ title: 'React POST Request Example' })
-        // };
-        // request.post({
-        //   url: receiptOcrEndpoint,
-        //   formData: {
-        //     client_id: 'TEST',        // Use 'TEST' for testing purpose
-        //     recognizer: 'auto',        // can be 'US', 'CA', 'JP', 'SG' or 'auto'
-        //     ref_no: 'ocr_nodejs_123', // optional caller provided ref code
-        //     file: selectedImage // the image file
-        //   },
-        // }, function(error, response, body) {
-        //   if(error) {
-        //     console.error(error);
-        //   }
-        //   console.log(body); // Receipt OCR result in JSON
-        //   setParseResults(body);
-        // });
-
         const formData = new FormData();
         formData.append("client_id", "TEST");
         formData.append("recognizer", "auto");
@@ -170,18 +133,12 @@ export default function NewExpense() {
 
         }).catch(function (error) {
             if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
             } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
                 console.log(error.request);
             } else {
-                // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
             }
             console.log(error.config);
@@ -214,8 +171,6 @@ export default function NewExpense() {
 
 
     return (
-
-       
         <Box style={{
             height: '750px',
             width: '100%',
@@ -279,7 +234,7 @@ export default function NewExpense() {
                             displayEmpty
                             inputProps={{ 'aria-label': 'Without label' }}
                         >
-                            {groupsss.map((gr) => <MenuItem value={10}>{gr.title}</MenuItem>)}
+                            {groups.map((gr) => <MenuItem value={gr.title}>{gr.title}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </Box>
@@ -290,7 +245,20 @@ export default function NewExpense() {
                     return (
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                             <TextField sx={{ margin: 2, width: '230px' }} value={items[idx]} onChange={e => updateItem(e, idx)} id="outlined-basic" label="Item" variant="outlined" />
-                            <TextField sx={{ margin: 2, width: '230px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Email or Phone Number" variant="outlined" />
+                            {/* <TextField sx={{ margin: 2, width: '230px' }} value={people[idx]} onChange={f => updateUser(f, idx)} id="outlined-basic" label="Venmo" variant="outlined" /> */}
+                            <FormControl sx={{ m: 2, minWidth: '200px' }}>
+                                <InputLabel>Venmo</InputLabel>
+                                <Select
+                                    value={people[idx]}
+                                    label="Venmo"
+                                    onChange={f => updateUser(f, idx)}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                >
+                                    {venmos.map((gr) => <MenuItem value={gr}>{gr}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+
                             <TextField sx={{ margin: 2, width: '230px' }} value={prices[idx]} onChange={g => updatePrice(g, idx)} id="outlined-basic" label="Price" variant="outlined" />
                             <Button variant="contained" sx={{ margin: 2, color: 'white', width: '100px' }} onClick={() => handleVenmo(items[idx], people[idx], prices[idx])}> Charge</Button>
                         </Box>
@@ -304,8 +272,8 @@ export default function NewExpense() {
                 </Box> */}
                 {/* <TextField disabled sx={{ margin: 2, width: '530px', background: '#f7f7f7' }} id="outlined-basic" label="" variant="outlined" /> */}
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Button variant="contained" color="error" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={removeItemArr}>Remove Item</Button>
-                    <Button variant="contained" color="warning" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={addItemArr}>Add Item</Button>
+                    <Button variant="contained" color="error" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={clearAll}>Clear All</Button>
+                    <Button variant="contained" color="warning" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={() => { addItemArr() }}>Add Item</Button>
                     <Button variant="contained" color="success" sx={{ margin: 2, marginTop: 4, color: 'white', width: '150px' }} onClick={submit}>Submit</Button>
                 </Box>
             </Box>
