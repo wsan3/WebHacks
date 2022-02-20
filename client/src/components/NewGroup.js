@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import { collection, where, query, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, where, query, getDoc, getDocs, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from '../firebase';
 import { FieldValue } from 'firebase/firestore';
 import logo from '../assests/card.png'
@@ -61,6 +61,30 @@ export default function NewGroup() {
             venmos: people
         });
 
+        const itemRef = collection(db, 'Users');
+        people.forEach(person => {
+            
+            console.log(person);
+            const q = query(itemRef, where("name", "==", person))
+            const querySnapshot = getDocs(q)
+                .then((d) => {
+                    let arr = d[0]
+                    //arr.push(id);
+                    console.log(d[0].data())
+                    // updateDoc(doc(itemRef, person), {
+                    //     groups: arr
+                    // });
+                    // d.forEach((doc) => {
+                    //     arr.push({ id: doc.id, ...doc.data() })
+                    // })
+                    // console.log("test", arr)
+                    // this.setState({ items: arr })
+                    // arr.filter(word => word.location == this.props.location)
+                    // this.props.noResults(arr.length)
+                })
+        })        
+
+
         // var db = firebase.firestore();
         // db2.collection("Users").doc("Q7P2o9HQskJmkSEDaSAX").update({ name: "Jackie Chan" });
 
@@ -82,6 +106,8 @@ export default function NewGroup() {
 
         submitSuccess()
     };
+
+
 
     return (
         <Box style={{
