@@ -19,6 +19,7 @@ export default function NewGroup() {
     const [createdBy, setCreatedBy] = React.useState('');
     const [people, setPeople] = React.useState([]);
 
+
     const handleTitle = (event) => {
         setTitle(event.target.value);
     };

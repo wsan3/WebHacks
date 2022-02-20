@@ -28,6 +28,16 @@ export default function NewExpense() {
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
 
+    React.useEffect(() => {
+        // setShowSuccess(!showSuccess);
+        mero();
+    });
+
+    const mero = () => {
+        console.log("init");
+
+    }
+
     const groups = [
         "Utilities", "School", "Friends", "Couple", "Personal", "Other"
     ]
@@ -200,10 +210,10 @@ export default function NewExpense() {
                 <Box sx={{ fontSize: 60, padding: 2, fontWeight: 'bold', color: '#1976d2' }}>Create New Expense</Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Box sx={{margin:3}} >
+                    <Box sx={{ margin: 3 }} >
                         <img id="file-ip-1-preview" height={400} width={400} />
                     </Box>
-                    <Box sx={{ height:'400px',display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection:'column'}}>
+                    <Box sx={{ height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
 
                         <input
                             style={{ padding: 30, marginLeft: 70 }}
