@@ -15,19 +15,32 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import logo from '../assests/card.png'
+import { collection, where, query, getDoc, getDocs, doc, setDoc, clearIndexedDbPersistence } from "firebase/firestore";
+import { db } from '../firebase';
 
 export default function Dashboard() {
-    function renderRow(props) {
-        const { index, style } = props;
+    const [group, setGroup] = React.useState('');
+    // const [venmos, setVenmos] = React.useState([]);
+    const [groups, setGroups] = React.useState([]);
 
-        return (
-            <ListItem key={index} component="div" disablePadding>
-                <ListItemButton>
-                    <ListItemText primary={`Item ${index + 1}`} />
-                </ListItemButton>
-            </ListItem>
-        );
-    }
+    React.useEffect(() => {
+        // declare the async data fetching function
+        const fetchData = async () => {
+            const q = query(collection(db, "Groups"));
+            const querySnapshot = await getDocs(q);
+            let groups = []
+            querySnapshot.forEach((doc) => {
+                groups.push(doc.data());
+            });
+            setGroups(groups)
+            console.log(groups)
+        }
+
+        // call the function
+        fetchData()
+            // make sure to catch any error
+            .catch(console.error);;
+    }, [])
 
     return (
         <Box style={{
@@ -91,21 +104,18 @@ export default function Dashboard() {
                             </TableHead>
 
                             <TableBody>
-                                <TableRow  >
-                                    <TableCell component="th" scope="row">Utilies</TableCell>
-                                    <TableCell align="right">3</TableCell>
-                                    <TableCell align="right">3</TableCell>
-                                </TableRow>
-                                <TableRow  >
-                                    <TableCell component="th" scope="row">Florida Trip</TableCell>
-                                    <TableCell align="right">6</TableCell>
-                                    <TableCell align="right">3</TableCell>
-                                </TableRow>
-                                <TableRow  >
-                                    <TableCell component="th" scope="row">Groceries</TableCell>
-                                    <TableCell align="right">1</TableCell>
-                                    <TableCell align="right">3</TableCell>
-                                </TableRow>
+                                {groups.map((row) => (
+                                    <TableRow
+                                        key={row.title}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.title}
+                                        </TableCell>
+                                        <TableCell align="right">{row.expenses.length}</TableCell>
+                                        <TableCell align="right">{row.venmos.length}</TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </Box>
